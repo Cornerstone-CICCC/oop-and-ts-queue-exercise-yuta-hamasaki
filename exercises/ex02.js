@@ -6,13 +6,26 @@
 const Queue = require('../lib/Queue')
 
 function groceryCheckout(queue) {
-  // your code here
+  const tempQueue = new Queue()
+
+  while (!queue.isEmpty()) {
+    let customer = queue.dequeue()
+    let totalCost = customer.cart.reduce((sum, item) => sum + item.price, 0)
+    
+    if (totalCost > 50) {
+      tempQueue.enqueue(customer)
+    }
+  }
+
+  while (!tempQueue.isEmpty()) {
+    queue.enqueue(tempQueue.dequeue())
+  }
 }
 
 const customers = new Queue();
-customers.push({ name: "Alice", cart: [{ item: "Milk", price: 10 }, { item: "Bread", price: 5 }] });
-customers.push({ name: "Bob", cart: [{ item: "Laptop", price: 500 }, { item: "Mouse", price: 20 }] });
-customers.push({ name: "Charlie", cart: [{ item: "Candy", price: 2 }, { item: "Juice", price: 3 }] });
+customers.enqueue({ name: "Alice", cart: [{ item: "Milk", price: 10 }, { item: "Bread", price: 5 }] });
+customers.enqueue({ name: "Bob", cart: [{ item: "Laptop", price: 500 }, { item: "Mouse", price: 20 }] });
+customers.enqueue({ name: "Charlie", cart: [{ item: "Candy", price: 2 }, { item: "Juice", price: 3 }] });
 
 groceryCheckout(customers);
 console.log(customers.printQueue());
